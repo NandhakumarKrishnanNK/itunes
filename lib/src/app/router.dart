@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:itunes/src/view/home_screen.dart';
 
 import '../view/splash_screen.dart';
 
@@ -12,15 +13,13 @@ class AppRoutes {
   // All named route paths. So that we can access them easily across the app
   static const String root = '/';
   static const String homeScreen = '/home';
-  static const String loginScreen = '/login';
-  static const String dashboardAnalytics = '/dashboard';
 
   /// private static methods that are accessible for only within the class not outside.
   static Widget _splashRouteBuilder(
           BuildContext context, GoRouterState state) =>
-      SplashScreen();
-  static Widget _loginRouteBuilder(BuildContext context, GoRouterState state) =>
-      Container();
+      const SplashScreen();
+  static Widget _homeRouteBuilder(BuildContext context, GoRouterState state) =>
+      HomeScreen();
 
   /// use this in [MaterialApp.router]
   static final _router = GoRouter(
@@ -32,16 +31,10 @@ class AppRoutes {
           name: AppRoutes.root,
           builder: _splashRouteBuilder),
       GoRoute(
-        path: AppRoutes.loginScreen,
-        name: AppRoutes.loginScreen,
-        builder: _loginRouteBuilder,
+        path: AppRoutes.homeScreen,
+        name: AppRoutes.homeScreen,
+        builder: _homeRouteBuilder,
       ),
-
-      // GoRoute(
-      //   path: AppRoutes.indent,
-      //   name: AppRoutes.indent,
-      //   builder: _indentRouteBuilder,
-      // ),
     ],
     // errorBuilder: errorWidget,
   );

@@ -97,11 +97,11 @@ class HttpRepository {
               data: requestBodydata, queryParameters: queryParams);
           break;
       }
-      debugPrint('<<<--- After Request --->>> '
-          ' \n URL-->$urlString'
-          ' \n RequestBodyData : $requestBodydata'
-          ' \n Response : ${jsonDecode(response.toString())} //Completed'
-          ' \n Message : ${response?.statusMessage}');
+      // debugPrint('<<<--- After Request --->>> '
+      //     ' \n URL-->$urlString'
+      //     ' \n RequestBodyData : $requestBodydata'
+      //     ' \n Response : ${jsonDecode(response.toString())} //Completed'
+      //     ' \n Message : ${response?.statusMessage}');
 
       responseData = ResponseData(
           success: true,
@@ -109,11 +109,11 @@ class HttpRepository {
           statusCode: response?.statusCode,
           message: response?.statusMessage);
     } on DioException catch (e) {
-      debugPrint('<<<--- Error Status --->>>: '
-          ' \n  URL : $urlString'
-          ' \n  RequestBodyData : $requestBodydata'
-          ' \n  Response : ${e.response}'
-          ' \n  Message : ${e.response}');
+      // debugPrint('<<<--- Error Status --->>>: '
+      //     ' \n  URL : $urlString'
+      //     ' \n  RequestBodyData : $requestBodydata'
+      //     ' \n  Response : ${e.response}'
+      //     ' \n  Message : ${e.response}');
       responseData = ResponseData(
           success: false,
           data: e.response?.data,

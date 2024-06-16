@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'logging.dart';
+import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
+import 'package:itunes/src/app/http/logging.dart';
 
 class DioClient extends DioMixin implements Dio {
   static Dio dioConfig({Map<String, dynamic>? header}) {
@@ -13,6 +17,28 @@ class DioClient extends DioMixin implements Dio {
         contentType: 'application/json',
       ),
     )..interceptors.add(LogInterceptor(responseBody: true));
+
+    // dio.httpClientAdapter = IOHttpClientAdapter(
+    //     createHttpClient: () {
+    //       final SecurityContext context = SecurityContext();
+    //       HttpClient client = HttpClient(context: context);
+
+    //       client.badCertificateCallback =
+    //           (X509Certificate cert, String host, int port) => false;
+    //       context.setTrustedCertificatesBytes(base64Decode(Env.sslCertKey));
+    //       return client;
+    //     },
+    //     // validateCertificate: (cert, host, port) {
+    //     //   // Check that the cert fingerprint matches the one we expect
+    //     //   // We definitely require _some_ certificate
+    //     //   if (cert == null) return false;
+    //     //   // Validate it any way you want. Here we only check that
+    //     //   // the fingerprint matches the OpenSSL SHA256.
+    //     //   final f = sha256.convert(cert.der).toString();
+    //     //   print(f);
+    //     //   return fingerprint == f;
+    //     // },
+    //   );
 
     return dio;
   }
