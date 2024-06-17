@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:itunes/src/app/http/api_repository.dart';
 import 'package:itunes/src/app/http/http_urls.dart';
 
@@ -8,9 +10,9 @@ class ApiService {
       {String? artist, required String entity}) async {
     ITunesModel itunesData = ITunesModel();
     await HttpRepository.apiRequest(HttpRequestType.get,
-            HttpUrls.searchITunes(artist: artist, entity: entity)) //song
+            HttpUrls.searchITunes(artist: artist, entity: entity))
         .then((response) {
-      itunesData = ITunesModel.fromJson(response.data);
+      itunesData = ITunesModel.fromJson(jsonDecode(response.data));
     });
     return itunesData;
   }
