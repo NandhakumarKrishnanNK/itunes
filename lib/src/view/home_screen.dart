@@ -1,89 +1,106 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:itunes/src/widget/text_widget.dart';
-import '../app/utils/string_resources.dart';
-import '../providers/itunes_provider.dart';
-import '../viewmodel/search_itunes_viewmodel.dart';
-import '../viewmodel/update_style_viewmodel.dart';
-import '../widget/loading_widget.dart';
-import '../widget/search_widget.dart';
-import '../widget/tabbar_widget.dart';
-import '../widget/gridview_card_widget.dart';
-import '../widget/listview_card_widget.dart';
 
-class HomeScreen extends ConsumerWidget {
+import '../app/utils/string_resources.dart';
+import '../widget/primary_button.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final itunesData = ref.watch(iTunesProvider);
-    final filteredData = ref.watch(searchItunesProvider);
-    final isGridView = ref.watch(updateStyleProvider);
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('iTunes'),
-      ),
-      body: SafeArea(
-        child: itunesData.when(
-          data: (data) {
-            return Column(
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TabbarWidget(
-                  tabs: const [
-                    StringResource.gridLayout,
-                    StringResource.listLayout
-                  ],
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 3.0),
-                  tabMargin:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-                  tabBorder: const Border(
-                      bottom: BorderSide(color: Colors.transparent)),
-                  selectedTabDecoration: BoxDecoration(
-                      color: Colors.teal[200],
-                      borderRadius: const BorderRadius.all(Radius.circular(6))),
-                  lableStyle: const TextStyle(color: Colors.white),
-                  unSelectedLabelStyle: const TextStyle(color: Colors.white),
-                  unSelectBackgroundColor: Colors.grey[700],
-                  onTap: (index) {
-                    ref.read(updateStyleProvider.notifier).changeView();
-                  },
+                const TextWidget(
+                  text: StringResource.itunes,
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 ),
-                SearchWidget(itunesData: data),
-                const SizedBox(height: 2.0),
-                Expanded(
-                    child: ListView.builder(
-                        itemCount: filteredData.isNotEmpty
-                            ? filteredData.length
-                            : data.length,
-                        itemBuilder: (context, index) {
-                          var res =
-                              filteredData.isNotEmpty ? filteredData : data;
-                          return Column(
-                            children: [
-                              TextWidget(text: res[index].title),
-                              ListViewCardWidget(listData: res[index].data),
-                            ],
-                          );
-                        })),
-                // if (isGridView)
-                //   Expanded(
-                //       child: GridviewCardWidget(
-                //           listData: searchController.isNotEmpty
-                //               ? searchController
-                //               : data))
-                // else
-                //   Expanded(
-                //       child: ListViewCardWidget(
-                //           listData: searchController.isNotEmpty
-                //               ? searchController
-                //               : data))
+                const SizedBox(
+                  height: 28,
+                ),
+                TextWidget(
+                  text: "Search iTunes collection based on the Artist name.",
+                  textStyle: TextStyle(
+                    color: Colors.grey[50],
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                CupertinoSearchTextField(
+                  controller: _controller,
+                  onChanged: (value) {},
+                  onSubmitted: (val) {},
+                  suffixMode: OverlayVisibilityMode.never,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Colors.teal[800]),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                TextWidget(
+                  text:
+                      "Select the iTunes category like song, ebook, movies etc...",
+                  textStyle: TextStyle(
+                    color: Colors.grey[50],
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(6),
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.teal[800]),
+                    child: const TextWidget(
+                      text: "Select iTunes category.",
+                      textStyle: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 65,
+                ),
+                PrimaryButton(
+                  text: StringResource.submit,
+                  width: double.infinity,
+                  onTap: () {},
+                  backgroundColor: Colors.teal[200],
+                )
               ],
-            );
-          },
-          loading: () => const LoadingWidget(),
-          error: (error, stack) => Center(
-            child: TextWidget(text: 'Error: $error'),
+            ),
           ),
         ),
       ),

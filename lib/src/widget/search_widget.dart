@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:itunes/src/model/itunes_model.dart';
 
@@ -29,6 +30,8 @@ class SearchWidget extends ConsumerWidget {
               .searchData(searchQuery, itunesData);
         },
         suffixMode: OverlayVisibilityMode.never,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6), color: Colors.teal[800]),
       ),
     );
   }

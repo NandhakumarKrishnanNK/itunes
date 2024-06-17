@@ -16,7 +16,7 @@ class ListViewCardWidget extends StatelessWidget {
           return ListCardView(data: listData[index]);
         },
         separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(height: 4.0);
+          return const SizedBox(height: 8.0);
         },
         itemCount: listData.length);
   }

@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:itunes/src/view/detail_screen.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 
+import '../app/utils/string_resources.dart';
 import '../model/itunes_model.dart';
-import '../view/details_screen.dart';
 import 'shimmer_widget.dart';
 
 class GridCardView extends StatelessWidget {
@@ -17,20 +18,25 @@ class GridCardView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailsPage(
-              video: data,
+            builder: (context) => DetailScreen(
+              data: data,
             ),
           ),
         );
       },
-      child: Card(
+      child: Container(
+        width: 160,
+        decoration: BoxDecoration(
+            // color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(4.0)),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CachedNetworkImage(
-              height: 125.0,
+              height: 135.0,
               fit: BoxFit.fill,
+              width: 125,
               imageUrl:
                   data.artworkUrl100 ?? 'http://via.placeholder.com/350x150',
               placeholder: (context, url) => const Center(
@@ -41,14 +47,57 @@ class GridCardView extends StatelessWidget {
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             const SizedBox(
-              height: 8.0,
+              height: 2.0,
             ),
-            TextWidget(
-              text: data.trackName ?? '',
-              isSingleLine: true,
-              textStyle:
-                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, right: 2.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextWidget(
+                    text: data.trackName ?? '',
+                    maxLines: 2,
+                    isSingleLine: false,
+                    textStyle: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                            color: Colors.amber[200],
+                            borderRadius: BorderRadius.circular(3)),
+                        child: const TextWidget(
+                          text: ' ${StringResource.artist}: ',
+                          textStyle: TextStyle(
+                              fontSize: 11.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
+                      ),
+                      Flexible(
+                        child: TextWidget(
+                          text: ' ${data.artistName ?? ''}',
+                          isSingleLine: true,
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
