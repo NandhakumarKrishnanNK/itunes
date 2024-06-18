@@ -25,8 +25,8 @@ class DioClient extends DioMixin implements Dio {
     //     HttpClient client = HttpClient(context: context);
 
     //     client.badCertificateCallback =
-    //         (X509Certificate cert, String host, int port) => false;
-    //     context.setTrustedCertificatesBytes(base64Decode(Constants.sslCertKey));
+    //         (X509Certificate cert, String host, int port) => true;
+    //     // context.setTrustedCertificatesBytes(base64Decode(Constants.sslCertKey));
     //     return client;
     //   },
     // );

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:itunes/src/app/router.dart';
 import 'package:itunes/src/app/utils/string_resources.dart';
 import 'package:itunes/src/model/itunes_model.dart';
-import 'package:itunes/src/view/detail_screen.dart';
 
 import 'shimmer_widget.dart';
 import 'text_widget.dart';
@@ -15,14 +15,7 @@ class ListCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(
-              data: data,
-            ),
-          ),
-        );
+        GoRouter.of(context).push<bool>(AppRoutes.detailScreen, extra: data);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),

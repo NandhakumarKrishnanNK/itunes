@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:itunes/src/view/detail_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:itunes/src/app/router.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 
 import '../app/utils/string_resources.dart';
@@ -15,14 +15,7 @@ class GridCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(
-              data: data,
-            ),
-          ),
-        );
+        GoRouter.of(context).push<bool>(AppRoutes.detailScreen, extra: data);
       },
       child: Container(
         width: 160,

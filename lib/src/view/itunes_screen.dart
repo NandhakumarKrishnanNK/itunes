@@ -36,69 +36,85 @@ class ITunesScreen extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      bottomNavigationBar: TabbarWidget(
-        tabs: const [StringResource.gridLayout, StringResource.listLayout],
-        labelPadding: const EdgeInsets.symmetric(horizontal: 3.0),
-        tabMargin: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-        tabBorder: const Border(bottom: BorderSide(color: Colors.transparent)),
-        selectedTabDecoration: BoxDecoration(
-            color: Colors.teal[200],
-            borderRadius: const BorderRadius.all(Radius.circular(6))),
-        lableStyle:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        unSelectedLabelStyle:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        unSelectBackgroundColor: Colors.grey[700],
-        onTap: (index) {
-          ref.read(updateStyleProvider.notifier).changeView();
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: TabbarWidget(
+          tabs: const [StringResource.gridLayout, StringResource.listLayout],
+          labelPadding: const EdgeInsets.symmetric(horizontal: 3.0),
+          tabMargin: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+          tabBorder:
+              const Border(bottom: BorderSide(color: Colors.transparent)),
+          selectedTabDecoration: BoxDecoration(
+              color: Colors.teal[200],
+              borderRadius: const BorderRadius.all(Radius.circular(6))),
+          lableStyle:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          unSelectedLabelStyle:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          initialIndex: isGridView ? 0 : 1,
+          unSelectBackgroundColor: Colors.grey[700],
+          onTap: (index) {
+            ref.read(updateStyleProvider.notifier).changeView();
+          },
+        ),
       ),
       body: SafeArea(
         child: itunesData.when(
           data: (data) {
             return data.isNotEmpty
-                ? Column(
-                    children: [
-                      SearchWidget(itunesData: data),
-                      const SizedBox(height: 4),
-                      Expanded(
-                          child: ListView.builder(
-                              itemCount: filteredData.isNotEmpty
-                                  ? filteredData.length
-                                  : data.length,
-                              itemBuilder: (context, index) {
-                                var res = filteredData.isNotEmpty
-                                    ? filteredData
-                                    : data;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    HeaderWidget(text: res[index].title),
-                                    const SizedBox(height: 4),
-                                    if (isGridView)
-                                      Wrap(
-                                        direction: Axis.horizontal,
-                                        runSpacing: 14,
-                                        children: List.generate(
-                                            res[index].data.length, (i) {
-                                          return Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 14),
-                                            child: SizedBox(
-                                                height: 220,
-                                                child: GridCardView(
-                                                    data: res[index].data[i])),
-                                          );
-                                        }),
-                                      )
-                                    else
-                                      ListViewCardWidget(
-                                          listData: res[index].data),
-                                  ],
-                                );
-                              })),
-                      const SizedBox(height: 2),
-                    ],
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        SearchWidget(itunesData: data),
+                        const SizedBox(height: 4),
+                        Expanded(
+                            child: ListView.builder(
+                                itemCount: filteredData.isNotEmpty
+                                    ? filteredData.length
+                                    : data.length,
+                                itemBuilder: (context, index) {
+                                  var res = filteredData.isNotEmpty
+                                      ? filteredData
+                                      : data;
+                                  var wrapSpace =
+                                      (MediaQuery.sizeOf(context).width - 346) /
+                                          3;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      HeaderWidget(text: res[index].title),
+                                      const SizedBox(height: 4),
+                                      if (isGridView)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 8,
+                                              horizontal: wrapSpace),
+                                          child: Wrap(
+                                            direction: Axis.horizontal,
+                                            alignment: WrapAlignment.start,
+                                            runSpacing: 14,
+                                            spacing: wrapSpace,
+                                            children: List.generate(
+                                                res[index].data.length, (i) {
+                                              return SizedBox(
+                                                  height: 220,
+                                                  child: GridCardView(
+                                                      data:
+                                                          res[index].data[i]));
+                                            }),
+                                          ),
+                                        )
+                                      else
+                                        ListViewCardWidget(
+                                            listData: res[index].data),
+                                    ],
+                                  );
+                                })),
+                        const SizedBox(height: 2),
+                      ],
+                    ),
                   )
                 : const Center(
                     child: TextWidget(
@@ -111,8 +127,11 @@ class ITunesScreen extends ConsumerWidget {
                   );
           },
           loading: () => const LoadingWidget(),
-          error: (error, stack) => Center(
-            child: TextWidget(text: 'Error: $error'),
+          error: (error, stack) => const Center(
+            child: TextWidget(
+              text: 'Error: Something went wrong.',
+              textStyle: TextStyle(color: Colors.white),
+            ),
           ),
         ),
       ),

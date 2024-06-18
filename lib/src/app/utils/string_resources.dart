@@ -13,4 +13,5 @@ class StringResource {
   static const String submit = 'Submit';
   static const String selectMediaType = 'Select iTunes category';
   static const String noDataFound = 'No data found.';
+  static const String preview = 'Preview';
 }

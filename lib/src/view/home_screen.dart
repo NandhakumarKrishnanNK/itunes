@@ -1,14 +1,15 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:itunes/src/app/router.dart';
 import 'package:itunes/src/app/utils/app_utils.dart';
 import 'package:itunes/src/app/utils/constants.dart';
 import 'package:itunes/src/view/itunes_screen.dart';
-import 'package:itunes/src/view/media_screen.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 
 import '../app/utils/string_resources.dart';
+import '../providers/itunes_provider.dart';
 import '../viewmodel/media_viewmodel.dart';
 import '../widget/primary_button.dart';
 
@@ -79,12 +80,7 @@ class HomeScreen extends ConsumerWidget {
                   text: StringResource.selectMediaType,
                   width: double.infinity,
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MediaScreen(),
-                      ),
-                    );
+                    GoRouter.of(context).push<bool>(AppRoutes.mediaSceen);
                   },
                   backgroundColor: Colors.transparent,
                   borderColor: Colors.white60,
@@ -135,15 +131,11 @@ class HomeScreen extends ConsumerWidget {
                             (index) =>
                                 Constants.mediaType[selectedItems[index]])
                         .join(',');
-                    // print(entity.toString());
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ITunesScreen(
+
+                    GoRouter.of(context).push<bool>(AppRoutes.itunesScreen,
+                        extra: ITuneParameter(
                             term: _controller.text,
-                            entity: selectedItems.isNotEmpty ? entity : ''),
-                      ),
-                    );
+                            entity: selectedItems.isNotEmpty ? entity : ''));
                   },
                   backgroundColor: Colors.teal[200],
                 )

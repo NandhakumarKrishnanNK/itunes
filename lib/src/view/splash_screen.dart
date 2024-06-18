@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -34,49 +35,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _animationController.forward();
-
-    // Navigate to the home screen after the animation is complete
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        GoRouter.of(context).go(AppRoutes.homeScreen);
-      }
-    });
-  }
-
-  Future<void> checkJailBreak() async {
-    bool jailbroken;
-    bool developerMode;
-    try {
-      jailbroken = await FlutterJailbreakDetection.jailbroken;
-      developerMode = await FlutterJailbreakDetection.developerMode;
-      // print('CheckJailBreak Called ----> $jailbroken  ---  $developerMode');
-    } on PlatformException {
-      jailbroken = true;
-      developerMode = true;
-    }
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    if (jailbroken || developerMode) {
-      await DialogWidget.showDialog(
-          // ignore: use_build_context_synchronously
-          buildContext: AppRoutes().context,
-          title: 'Error!',
-          description: 'Rooted device/DeveloperMode is Enabled',
-          okBtnText: 'Close',
-          okBtnFunction: (val) {
-            Navigator.of(context, rootNavigator: true).pop();
-          });
-    }
-
-    // setState(() {
-    //   checkJailbroken = jailbroken;
-    //   checkDeveloperMode = developerMode;
-    // });
-    // print(
-    //     'CheckJailBreak Called After Complete ----> $checkJailbroken  ---  $checkDeveloperMode');
+    checkJailBreak();
   }
 
   @override
@@ -118,5 +77,48 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
+  }
+
+  Future<void> checkJailBreak() async {
+    bool jailbroken;
+    bool developerMode;
+    try {
+      jailbroken = await FlutterJailbreakDetection.jailbroken;
+      developerMode = await FlutterJailbreakDetection.developerMode;
+    } on PlatformException {
+      jailbroken = true;
+      developerMode = true;
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+
+    if (jailbroken) {
+      errorDialog("Rooted device/DeveloperMode is Enabled");
+    } else if (developerMode) {
+      errorDialog("DeveloperMode is Enabled");
+    } else {
+      // Navigate to the home screen after the animation is complete
+      _animationController.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          GoRouter.of(context).go(AppRoutes.homeScreen);
+        }
+      });
+    }
+  }
+
+  void errorDialog(String msg) async {
+    await DialogWidget.showDialog(
+        // ignore: use_build_context_synchronously
+        buildContext: AppRoutes().context,
+        title: 'Error!',
+        description: 'DeveloperMode is Enabled',
+        okBtnText: 'Close',
+        okBtnFunction: (val) {
+          while (context.canPop()) {
+            context.pop();
+          }
+        });
   }
 }

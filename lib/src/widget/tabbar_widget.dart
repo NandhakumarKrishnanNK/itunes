@@ -28,6 +28,7 @@ class TabbarWidget extends StatefulWidget {
     this.suffixIcon,
     this.isPrefixIcon = true,
     this.isSuffixIcon = false,
+    this.initialIndex = 0,
   });
   final List<String> tabs;
   final List<dynamic>? prefixIcon;
@@ -51,6 +52,7 @@ class TabbarWidget extends StatefulWidget {
   final EdgeInsetsGeometry? indicatorPadding;
   final ScrollPhysics? physics;
   final TabController? controller;
+  final int initialIndex;
   bool isPrefixIcon;
   bool isSuffixIcon;
 
@@ -65,7 +67,10 @@ class _TabbarWidgetState extends State<TabbarWidget>
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: widget.tabs.length, vsync: this);
+    controller = TabController(
+        length: widget.tabs.length,
+        vsync: this,
+        initialIndex: widget.initialIndex);
   }
 
   @override

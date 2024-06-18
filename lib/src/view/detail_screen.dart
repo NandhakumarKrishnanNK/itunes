@@ -216,6 +216,132 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                       ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    TextWidget(
+                      text: StringResource.preview,
+                      isSingleLine: true,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue[900],
+                      ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return DraggableScrollableSheet(
+                              expand: false,
+                              initialChildSize: 0.8,
+                              minChildSize: 0.8,
+                              maxChildSize: 0.9,
+                              builder: (BuildContext context,
+                                  ScrollController scrollController) {
+                                return Container(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          topRight: Radius.circular(12),
+                                        )),
+                                    child: Column(
+                                      children: [
+                                        Stack(
+                                          alignment:
+                                              AlignmentDirectional.bottomEnd,
+                                          children: [
+                                            CachedNetworkImage(
+                                              width: double.infinity,
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height *
+                                                  .8,
+                                              fit: BoxFit.fill,
+                                              imageUrl: widget
+                                                      .data.artworkUrl100 ??
+                                                  'http://via.placeholder.com/350x150',
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child: Shimmer(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              )),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
+                                            Container(
+                                              height: 240,
+                                              color: Colors.black
+                                                  .withOpacity(0.25),
+                                              width: double.infinity,
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    const SizedBox(height: 6),
+                                                    TextWidget(
+                                                      text: AppUtils
+                                                          .formatUtcDate(widget
+                                                              .data
+                                                              .releaseDate),
+                                                      isSingleLine: true,
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    TextWidget(
+                                                      text: widget.data
+                                                              .primaryGenreName ??
+                                                          '',
+                                                      maxLines: 2,
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 6),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10),
+                                                      child: Html(
+                                                        data: widget.data
+                                                                .longDescription ??
+                                                            widget.data
+                                                                .description ??
+                                                            '',
+                                                        style: {
+                                                          "body": Style(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                FontSize(14),
+                                                          )
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ));
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
