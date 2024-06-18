@@ -17,6 +17,7 @@ class SearchWidget extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
       child: CupertinoSearchTextField(
+        style: const TextStyle(color: Colors.white),
         onChanged: (value) {
           ref.read(searchProvider.notifier).update((state) => state = value);
           ref

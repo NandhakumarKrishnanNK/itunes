@@ -5,7 +5,7 @@ import 'package:itunes/src/widget/header_widget.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 import '../app/utils/string_resources.dart';
 import '../providers/itunes_provider.dart';
-import '../viewmodel/itunes_viewmodel.dart';
+// import '../viewmodel/itunes_viewmodel.dart';
 import '../viewmodel/search_itunes_viewmodel.dart';
 import '../viewmodel/update_style_viewmodel.dart';
 import '../widget/loading_widget.dart';
@@ -14,17 +14,15 @@ import '../widget/tabbar_widget.dart';
 import '../widget/listview_card_widget.dart';
 
 class ITunesScreen extends ConsumerWidget {
-  ITunesScreen({super.key, this.term, this.entity});
-  String? term;
-  String? entity;
+  const ITunesScreen({super.key, required this.term, required this.entity});
+  final String term;
+  final String entity;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itunesData = ref.watch(iTunesProvider);
+    final itunesData =
+        ref.watch(iTunesProvider(ITuneParameter(term: term, entity: entity)));
     final filteredData = ref.watch(searchItunesProvider);
     final isGridView = ref.watch(updateStyleProvider);
-    // ref
-    //     .read(iTunesViewModelProvider.notifier)
-    //     .fetchItunesData(artist: term, entity: entity);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -58,46 +56,59 @@ class ITunesScreen extends ConsumerWidget {
       body: SafeArea(
         child: itunesData.when(
           data: (data) {
-            return Column(
-              children: [
-                SearchWidget(itunesData: data),
-                const SizedBox(height: 4),
-                Expanded(
-                    child: ListView.builder(
-                        itemCount: filteredData.isNotEmpty
-                            ? filteredData.length
-                            : data.length,
-                        itemBuilder: (context, index) {
-                          var res =
-                              filteredData.isNotEmpty ? filteredData : data;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              HeaderWidget(text: res[index].title),
-                              const SizedBox(height: 4),
-                              if (isGridView)
-                                Wrap(
-                                  direction: Axis.horizontal,
-                                  runSpacing: 14,
-                                  children: List.generate(
-                                      res[index].data.length, (i) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(left: 14),
-                                      child: SizedBox(
-                                          height: 220,
-                                          child: GridCardView(
-                                              data: res[index].data[i])),
-                                    );
-                                  }),
-                                )
-                              else
-                                ListViewCardWidget(listData: res[index].data),
-                            ],
-                          );
-                        })),
-                const SizedBox(height: 2),
-              ],
-            );
+            return data.isNotEmpty
+                ? Column(
+                    children: [
+                      SearchWidget(itunesData: data),
+                      const SizedBox(height: 4),
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: filteredData.isNotEmpty
+                                  ? filteredData.length
+                                  : data.length,
+                              itemBuilder: (context, index) {
+                                var res = filteredData.isNotEmpty
+                                    ? filteredData
+                                    : data;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    HeaderWidget(text: res[index].title),
+                                    const SizedBox(height: 4),
+                                    if (isGridView)
+                                      Wrap(
+                                        direction: Axis.horizontal,
+                                        runSpacing: 14,
+                                        children: List.generate(
+                                            res[index].data.length, (i) {
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 14),
+                                            child: SizedBox(
+                                                height: 220,
+                                                child: GridCardView(
+                                                    data: res[index].data[i])),
+                                          );
+                                        }),
+                                      )
+                                    else
+                                      ListViewCardWidget(
+                                          listData: res[index].data),
+                                  ],
+                                );
+                              })),
+                      const SizedBox(height: 2),
+                    ],
+                  )
+                : const Center(
+                    child: TextWidget(
+                      text: StringResource.noDataFound,
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  );
           },
           loading: () => const LoadingWidget(),
           error: (error, stack) => Center(

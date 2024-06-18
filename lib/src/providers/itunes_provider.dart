@@ -1,15 +1,19 @@
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/itunes_grouped_model.dart';
 import '../model/itunes_model.dart';
 import '../services/api_service.dart';
 
-final iTunesProvider = FutureProvider<List<ITunesGroupedModel>>((ref) async {
+final iTunesProvider =
+    FutureProvider.family<List<ITunesGroupedModel>, ITuneParameter>(
+        (ref, params) async {
   return await ApiService()
       .getiTunesData(
-          artist: 'nolan',
-          entity: 'album,movieArtist,ebook,movie,musicVideo,podcast,song')
+    artist: params.term,
+    entity: params.entity,
+  )
       .then((onValue) {
     //Grouping the response
     final groupedResult = <ITunesGroupedModel>[];
@@ -22,3 +26,16 @@ final iTunesProvider = FutureProvider<List<ITunesGroupedModel>>((ref) async {
     return groupedResult;
   });
 });
+
+class ITuneParameter extends Equatable {
+  const ITuneParameter({
+    required this.term,
+    required this.entity,
+  });
+
+  final String term;
+  final String entity;
+
+  @override
+  List<Object> get props => [term, entity];
+}

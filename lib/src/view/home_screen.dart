@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -129,13 +130,18 @@ class HomeScreen extends ConsumerWidget {
                   text: StringResource.submit,
                   width: double.infinity,
                   onTap: () {
+                    var entity = List.generate(
+                            selectedItems.length,
+                            (index) =>
+                                Constants.mediaType[selectedItems[index]])
+                        .join(',');
+                    // print(entity.toString());
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ITunesScreen(
-                            term: 'nolan',
-                            entity:
-                                'album,movieArtist,ebook,movie,musicVideo,podcast,song'),
+                            term: _controller.text,
+                            entity: selectedItems.isNotEmpty ? entity : ''),
                       ),
                     );
                   },
