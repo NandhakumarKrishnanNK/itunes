@@ -11,4 +11,5 @@ class StringResource {
   static const String artist = 'Artist';
   static const String releasedDate = 'Released Date';
   static const String submit = 'Submit';
+  static const String selectMediaType = 'Select iTunes category';
 }

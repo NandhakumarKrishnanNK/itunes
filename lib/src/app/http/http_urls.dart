@@ -1,5 +1,10 @@
 class HttpUrls {
   static const String baseUrl = 'https://itunes.apple.com';
-  static String searchITunes({String? artist, required String entity}) =>
-      '$baseUrl/search?term=$artist&entity=$entity';
+  static String searchITunes({String? artist, String? entity}) {
+    if (entity != null) {
+      return '$baseUrl/search?term=$artist&entity=$entity';
+    } else {
+      return '$baseUrl/search?term=$artist';
+    }
+  }
 }

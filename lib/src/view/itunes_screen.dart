@@ -5,6 +5,7 @@ import 'package:itunes/src/widget/header_widget.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 import '../app/utils/string_resources.dart';
 import '../providers/itunes_provider.dart';
+import '../viewmodel/itunes_viewmodel.dart';
 import '../viewmodel/search_itunes_viewmodel.dart';
 import '../viewmodel/update_style_viewmodel.dart';
 import '../widget/loading_widget.dart';
@@ -13,18 +14,23 @@ import '../widget/tabbar_widget.dart';
 import '../widget/listview_card_widget.dart';
 
 class ITunesScreen extends ConsumerWidget {
-  const ITunesScreen({super.key});
-
+  ITunesScreen({super.key, this.term, this.entity});
+  String? term;
+  String? entity;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itunesData = ref.watch(iTunesProvider);
     final filteredData = ref.watch(searchItunesProvider);
     final isGridView = ref.watch(updateStyleProvider);
+    // ref
+    //     .read(iTunesViewModelProvider.notifier)
+    //     .fetchItunesData(artist: term, entity: entity);
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const TextWidget(
           text: StringResource.itunes,
           textStyle: TextStyle(

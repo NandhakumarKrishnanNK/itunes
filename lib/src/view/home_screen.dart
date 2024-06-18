@@ -1,21 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:itunes/src/app/utils/app_utils.dart';
+import 'package:itunes/src/app/utils/constants.dart';
+import 'package:itunes/src/view/itunes_screen.dart';
+import 'package:itunes/src/view/media_screen.dart';
 import 'package:itunes/src/widget/text_widget.dart';
 
 import '../app/utils/string_resources.dart';
+import '../viewmodel/media_viewmodel.dart';
 import '../widget/primary_button.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends ConsumerWidget {
   final TextEditingController _controller = TextEditingController();
+
+  HomeScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final selectedItems = ref.watch(selectedItemsProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -53,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: (value) {},
                   onSubmitted: (val) {},
                   suffixMode: OverlayVisibilityMode.never,
+                  style: const TextStyle(color: Colors.white),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       color: Colors.teal[800]),
@@ -71,32 +74,71 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 18,
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 100,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(6),
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.teal[800]),
-                    child: const TextWidget(
-                      text: "Select iTunes category.",
-                      textStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                PrimaryButton(
+                  text: StringResource.selectMediaType,
+                  width: double.infinity,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MediaScreen(),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  backgroundColor: Colors.transparent,
+                  borderColor: Colors.white60,
+                  buttonRadius: 6,
                 ),
+                const SizedBox(
+                  height: 18,
+                ),
+                if (selectedItems.isNotEmpty)
+                  Container(
+                      height: 80,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(6),
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.teal[800]),
+                      child: Wrap(
+                        children: List.generate(
+                          selectedItems.length,
+                          (index) => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            margin: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                color: Colors.teal[200],
+                                borderRadius: BorderRadius.circular(3)),
+                            child: TextWidget(
+                              text: AppUtils.capitalizeFirstWord(
+                                  Constants.mediaType[selectedItems[index]]),
+                              textStyle: const TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      )),
                 const SizedBox(
                   height: 65,
                 ),
                 PrimaryButton(
                   text: StringResource.submit,
                   width: double.infinity,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ITunesScreen(
+                            term: 'nolan',
+                            entity:
+                                'album,movieArtist,ebook,movie,musicVideo,podcast,song'),
+                      ),
+                    );
+                  },
                   backgroundColor: Colors.teal[200],
                 )
               ],

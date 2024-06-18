@@ -89,6 +89,10 @@ class PrimaryButtonState extends State<PrimaryButton> {
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0)))
               : RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: widget.borderColor ??
+                          widget.backgroundColor ??
+                          Colors.transparent),
                   borderRadius: BorderRadius.circular(widget.buttonRadius!),
                 ),
           elevation: widget.buttonElevation,
