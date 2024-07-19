@@ -15,10 +15,12 @@ void main() {
   setUp(() {
     mockApiService = MockApiService();
     container = ProviderContainer(overrides: [
-      iTunesProvider(ITuneParameter(term: 'nolan', entity: 'song'))
+      iTunesProvider(const ITuneParameter(term: 'nolan', entity: 'song'))
           .overrideWith((val) {
-        return mockApiService.getiTunesData().then((val) =>
-            [ITunesGroupedModel(title: 'song', data: val.results ?? [])]);
+        return mockApiService
+            .getiTunesData(artist: 'nolan', entity: 'song')
+            .then((val) =>
+                [ITunesGroupedModel(title: 'song', data: val.results ?? [])]);
       }),
     ]);
   });
@@ -34,17 +36,14 @@ void main() {
     final data = ITunesGroupedModel(title: 'song', data: [
       Results(trackName: 'trackName', kind: 'kind', artistName: 'artistName')
     ]);
-    when(mockApiService.getiTunesData().then(
+    when(mockApiService.getiTunesData(artist: 'nolan', entity: 'song').then(
         (val) => [ITunesGroupedModel(title: 'song', data: val.results ?? [])]));
 
     // Act
     await viewModel.asData;
 
     // Assert
-    expect(
-        container.read(
-            iTunesProvider(ITuneParameter(term: 'nolan', entity: 'song'))),
-        [data]);
+    expect(viewModel, [data]);
   });
 
   test('fetch data handles errors gracefully', () async {

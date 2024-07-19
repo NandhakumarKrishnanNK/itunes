@@ -48,6 +48,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   equatable: ^2.0.5
   http: ^1.2.1
+  coverage: ^1.8.0
 
 dev_dependencies:
   flutter_test:

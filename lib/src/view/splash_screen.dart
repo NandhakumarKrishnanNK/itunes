@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
@@ -96,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (jailbroken) {
       errorDialog("Rooted device/DeveloperMode is Enabled");
-    } else if (developerMode) {
+    } else if (!developerMode) {
       errorDialog("DeveloperMode is Enabled");
     } else {
       // Navigate to the home screen after the animation is complete
